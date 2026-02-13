@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lista de Tarefas</title>
+    <style>
+        body {
+            font-family: Arial;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex: 1;
+            padding: 8px;
+        }
+
+        button {
+            padding: 8px 12px;
+            cursor: pointer;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .concluida {
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .acoes a {
+            margin-left: 10px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Minha Lista de Tarefas</h1>
+
+<form method="POST" action="{% url 'criar_tarefa' %}">
+    {% csrf_token %}
+    <input type="text" name="titulo" placeholder="Nova tarefa..." required>
+    <button type="submit">Adicionar</button>
+</form>
+
+<ul>
+    {% for tarefa in tarefas %}
+        <li>
+            <span class="{% if tarefa.concluida %}concluida{% endif %}">
+                {{ tarefa.titulo }}
+            </span>
+
+            <div class="acoes">
+                <a href="{% url 'concluir_tarefa' tarefa.id %}">
+                    {% if tarefa.concluida %}Desfazer{% else %}Concluir{% endif %}
+                </a>
+
+                <a href="{% url 'deletar_tarefa' tarefa.id %}">
+                    Excluir
+                </a>
+            </div>
+        </li>
+    {% empty %}
+        <li>Nenhuma tarefa cadastrada.</li>
+    {% endfor %}
+</ul>
+
+</body>
+</html>
